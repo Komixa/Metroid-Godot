@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=3 uid="uid://bqtx10dofrd3g"]
+
+[ext_resource type="PackedScene" uid="uid://bo5q00rkrow5a" path="res://Player/Scenes/Player.tscn" id="1_pcf0c"]
+[ext_resource type="PackedScene" uid="uid://blelq83j5wuwv" path="res://Tilemap/tilemap.tscn" id="2_rh1ln"]
+
+[node name="World" type="Node2D"]
+
+[node name="Player" parent="." instance=ExtResource("1_pcf0c")]
+position = Vector2(110, 73)
+
+[node name="Tilemap" parent="." instance=ExtResource("2_rh1ln")]

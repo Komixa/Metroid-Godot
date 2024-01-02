@@ -1,0 +1,120 @@
+extends CharacterBody2D
+
+var movement = Vector2()
+var speed = 200
+var jump_ht = 600
+var fall_vel = 5
+var current_direction = "idle"
+var crouch = false
+
+@onready var anim = $Player_Anim
+
+func _physics_process(delta):
+	current_gravity()
+	player_mvt()
+	animation_player()
+	check_crouch_state()
+	
+	movement = movement.normalized() * speed * delta
+	move_and_slide()
+
+func player_mvt():
+	var LEFT = Input.is_action_pressed("ui_left")
+	var RIGHT = Input.is_action_pressed("ui_right")
+	var JUMP = Input.is_action_just_pressed("ui_accept")
+	var DOWN = Input.is_action_just_pressed("ui_down")
+	var UP = Input.is_action_just_pressed("ui_up")
+	
+	movement.x = -int(LEFT) + int(RIGHT)
+	movement.y = -int(JUMP)
+	
+	if movement.x != 0:
+		velocity.x = movement.x * speed
+	else:
+		velocity.x = 0
+	
+	if JUMP and is_on_floor():
+		fall_vel -= jump_ht
+	
+	if DOWN:
+		crouch = true
+
+func check_crouch_state():
+	if crouch:
+		pass
+	else:
+		pass
+
+func animation_player():
+	if movement.x == -1:
+		current_direction = "left"
+	
+	if movement.x == 1:
+		current_direction = "right"
+	
+	check_direction()
+
+func check_direction():
+	if !crouch:
+		#run left
+		if current_direction == "left":
+			if is_on_floor():
+				anim.play("Run_Left")
+		#jump left
+			if !is_on_floor():
+				if velocity.y < 0:
+					anim.play("Jump_Left")
+				if velocity.y > 0:
+					anim.play("Fall_Left")
+		#run right
+		if current_direction == "right":
+			if is_on_floor():
+				anim.play("Run_Right")
+		#jump right
+			if !is_on_floor():
+				if velocity.y < 0:
+					anim.play("Jump_Right")
+				if velocity.y > 0:
+					anim.play("Fall_Right")
+		#idle
+		if movement.x == 0:
+			#left
+			if current_direction == "left":
+				anim.play("Idle_Left")
+				#jump left
+				if !is_on_floor():
+					if velocity.y < 0:
+						anim.play("Idle_Jump_Left")
+					if velocity.y > 0:
+						anim.play("Fall_Left")
+			#right
+			if current_direction == "right":
+				anim.play("Idle_Right")
+			#jump right
+				if !is_on_floor():
+					if velocity.y < 0:
+						anim.play("Idle_Jump_Right")
+					if velocity.y > 0:
+						anim.play("Fall_Right")
+		#crouch
+		if crouch and current_direction == "left":
+			anim.play("Crouch_Left")
+		if crouch and current_direction == "right":
+			anim.play("crouch_Right")
+		
+
+func current_gravity():
+	var new_gravity = gravity_force.new()
+	velocity.y = fall_vel
+	if !is_on_floor():
+		fall_vel += new_gravity.gravity_strength
+	if is_on_floor() and fall_vel > 5:
+		fall_vel = 5
+	if fall_vel >= new_gravity.terminal_vel:
+		fall_vel = new_gravity.terminal_vel
+
+func player_anim():
+	pass
+
+func player_atk():
+	pass
