@@ -15,7 +15,7 @@
 [ext_resource type="Texture2D" uid="uid://byu00b5jyv5pn" path="res://Player/Sprites/Idle_Jump_Right.png" id="5_py1jt"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_6wv03"]
-size = Vector2(12, 34)
+size = Vector2(15, 30)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_6p67x"]
 animations = [{
@@ -121,12 +121,12 @@ script = ExtResource("1_c07h8")
 metadata/_edit_group_ = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(-1, -1)
+position = Vector2(0.5, 1)
 shape = SubResource("RectangleShape2D_6wv03")
 
 [node name="Player_Anim" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_6p67x")
-animation = &"Fall_Right"
+animation = &"Run_Right"
 
 [node name="Camera2D" type="Camera2D" parent="."]
 zoom = Vector2(2, 2)
