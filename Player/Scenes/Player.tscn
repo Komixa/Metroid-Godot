@@ -1,11 +1,15 @@
-[gd_scene load_steps=12 format=3 uid="uid://bo5q00rkrow5a"]
+[gd_scene load_steps=16 format=3 uid="uid://bo5q00rkrow5a"]
 
 [ext_resource type="Script" path="res://Player/Scripts/Player.gd" id="1_c07h8"]
+[ext_resource type="Texture2D" uid="uid://b7gmuan1mgfog" path="res://Player/Sprites/Crouch_Left.png" id="2_56iik"]
 [ext_resource type="Texture2D" uid="uid://dbj2lqwtvoo13" path="res://Player/Sprites/Idle_Right.png" id="2_v30eu"]
 [ext_resource type="Texture2D" uid="uid://byrnlnc8rugkp" path="res://Player/Sprites/Idle_Left.png" id="2_xmtur"]
+[ext_resource type="Texture2D" uid="uid://dldux56cw6nlv" path="res://Player/Sprites/Crouch_Right.png" id="3_eecaa"]
 [ext_resource type="Texture2D" uid="uid://bcc68pra4qaq7" path="res://Player/Sprites/Idle_Jump_Left.png" id="4_3vxtb"]
 [ext_resource type="Texture2D" uid="uid://bi18500kf2rw" path="res://Player/Sprites/Run_Left.png" id="4_bier5"]
 [ext_resource type="Texture2D" uid="uid://hx1qqns6thop" path="res://Player/Sprites/Jump_Right.png" id="4_lc4lt"]
+[ext_resource type="Texture2D" uid="uid://c4g5q5ea7lb2" path="res://Player/Sprites/Falling_Left.png" id="4_m61v0"]
+[ext_resource type="Texture2D" uid="uid://blog70tkp241d" path="res://Player/Sprites/Falling_Right.png" id="5_al6qf"]
 [ext_resource type="Texture2D" uid="uid://2uvjlywo3l0b" path="res://Player/Sprites/Jump_Left.png" id="5_dr563"]
 [ext_resource type="Texture2D" uid="uid://d1vhq35djwcy7" path="res://Player/Sprites/Run_Right.png" id="5_m7b4l"]
 [ext_resource type="Texture2D" uid="uid://byu00b5jyv5pn" path="res://Player/Sprites/Idle_Jump_Right.png" id="5_py1jt"]
@@ -17,7 +21,23 @@ size = Vector2(12, 34)
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("4_bier5")
+"texture": ExtResource("2_56iik")
+}],
+"loop": true,
+"name": &"Crouch_Left",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_eecaa")
+}],
+"loop": true,
+"name": &"Crouch_Right",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("4_m61v0")
 }],
 "loop": true,
 "name": &"Fall_Left",
@@ -25,7 +45,7 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("5_m7b4l")
+"texture": ExtResource("5_al6qf")
 }],
 "loop": true,
 "name": &"Fall_Right",
@@ -106,6 +126,7 @@ shape = SubResource("RectangleShape2D_6wv03")
 
 [node name="Player_Anim" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_6p67x")
-animation = &"Idle_Jump_Right"
+animation = &"Fall_Right"
 
 [node name="Camera2D" type="Camera2D" parent="."]
+zoom = Vector2(2, 2)
