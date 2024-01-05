@@ -126,7 +126,7 @@ shape = SubResource("RectangleShape2D_6wv03")
 
 [node name="Player_Anim" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_6p67x")
-animation = &"Run_Right"
+animation = &"Crouch_Left"
 
 [node name="Camera2D" type="Camera2D" parent="."]
 zoom = Vector2(2, 2)
