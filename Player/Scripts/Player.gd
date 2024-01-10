@@ -6,6 +6,7 @@ var jump_ht = 600
 var fall_vel = 5
 var current_direction = "right"
 var crouch = false
+var dash = false
 
 @onready var anim = $Player_Anim
 
@@ -24,6 +25,7 @@ func player_mvt():
 	var JUMP = Input.is_action_just_pressed("ui_accept")
 	var DOWN = Input.is_action_pressed("ui_down")
 	var UP = Input.is_action_pressed("ui_up")
+	var DASH = Input.is_action_pressed("dash")
 	
 	movement.x = -int(LEFT) + int(RIGHT)
 	movement.y = -int(JUMP)
@@ -40,6 +42,12 @@ func player_mvt():
 		crouch = true
 	if !DOWN:
 		crouch = false
+	
+	if DASH:
+		dash = true
+		player_dash()
+	if !DASH:
+		dash = false
 
 #func check_crouch_state():
 	#if crouch:
@@ -125,6 +133,12 @@ func current_gravity():
 		fall_vel = 5
 	if fall_vel >= new_gravity.terminal_vel:
 		fall_vel = new_gravity.terminal_vel
+
+func player_dash():
+	if current_direction == "left":
+		anim.play("Dash_Left")
+	if current_direction == "right":
+		anim.play("Dash_Right")
 
 func player_atk():
 	pass
