@@ -147,4 +147,4 @@ sprite_frames = SubResource("SpriteFrames_6p67x")
 animation = &"Dash_Right"
 
 [node name="Camera2D" type="Camera2D" parent="."]
-zoom = Vector2(2, 2)
+zoom = Vector2(4, 4)
