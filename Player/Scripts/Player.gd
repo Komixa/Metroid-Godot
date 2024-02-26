@@ -6,16 +6,18 @@ var jump_ht = 600
 var fall_vel = 5
 var current_direction = "right"
 var crouch = false
-var dash = false
+
+var dash = 0
+var dash_t = 15
+var dash_cd = 40
+var has_dash = dash_cd
 
 @onready var anim = $Player_Anim
 
 func _physics_process(delta):
 	current_gravity()
-	#check_crouch_state()
 	player_mvt()
 	animation_player()
-	
 	movement = movement.normalized() * speed * delta
 	move_and_slide()
 
@@ -25,7 +27,8 @@ func player_mvt():
 	var JUMP = Input.is_action_just_pressed("ui_accept")
 	var DOWN = Input.is_action_pressed("ui_down")
 	var UP = Input.is_action_pressed("ui_up")
-	var DASH = Input.is_action_pressed("dash")
+	var DASH = Input.is_action_just_pressed("game_dash")
+	var ATTACK = Input.is_action_just_pressed("game_attack")
 	
 	movement.x = -int(LEFT) + int(RIGHT)
 	movement.y = -int(JUMP)
@@ -35,6 +38,13 @@ func player_mvt():
 	else:
 		velocity.x = 0
 	
+	if DASH and has_dash == dash_cd:
+		dash = dash_t
+		has_dash = 0
+	
+	if ATTACK:
+		player_atk()
+	
 	if JUMP and is_on_floor():
 		fall_vel -= jump_ht
 	
@@ -43,11 +53,10 @@ func player_mvt():
 	if !DOWN:
 		crouch = false
 	
-	if DASH:
-		dash = true
-		player_dash()
-	if !DASH:
-		dash = false
+	if dash > 0:
+		dash -=1
+	if has_dash < dash_cd:
+		has_dash += 1
 
 #func check_crouch_state():
 	#if crouch:
@@ -123,6 +132,17 @@ func check_direction():
 		if !is_on_floor():
 			if velocity.y > 0:
 				anim.play("Fall_Right")
+	#dash
+	if dash > 0:
+		speed = (dash*(int(800/dash_t)))
+		if current_direction == "left":
+			anim.play("Dash_Left")
+			anim.frame = int((dash_t-dash)/5)
+		if current_direction == "right":
+			anim.play("Dash_Right")
+			anim.frame = int((dash_t-dash)/5)
+		if !is_on_floor():
+			velocity.y = 0
 
 func current_gravity():
 	var new_gravity = gravity_force.new()
@@ -133,12 +153,6 @@ func current_gravity():
 		fall_vel = 5
 	if fall_vel >= new_gravity.terminal_vel:
 		fall_vel = new_gravity.terminal_vel
-
-func player_dash():
-	if current_direction == "left":
-		anim.play("Dash_Left")
-	if current_direction == "right":
-		anim.play("Dash_Right")
 
 func player_atk():
 	pass
