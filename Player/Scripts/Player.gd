@@ -17,7 +17,7 @@ var has_dash = dash_cd
 func _physics_process(delta):
 	current_gravity()
 	player_mvt()
-	animation_player()
+	check_direction()
 	movement = movement.normalized() * speed * delta
 	move_and_slide()
 
@@ -64,85 +64,28 @@ func player_mvt():
 	#else:
 		#pass
 
-func animation_player():
+func check_direction():
 	if movement.x == -1:
 		current_direction = "left"
 	
 	if movement.x == 1:
 		current_direction = "right"
 	
-	check_direction()
+	animation_player()
 
-func check_direction():
+func animation_player():
 	if !crouch:
 		speed = 200
-		#run left
-		if current_direction == "left":
-			if is_on_floor():
-				anim.play("Run_Left")
-			#jump left
-			if !is_on_floor():
-				if velocity.y < 0:
-					anim.play("Jump_Left")
-				if velocity.y > 0:
-					anim.play("Fall_Left")
-		#run right
-		if current_direction == "right":
-			if is_on_floor():
-				anim.play("Run_Right")
-			#jump right
-			if !is_on_floor():
-				if velocity.y < 0:
-					anim.play("Jump_Right")
-				if velocity.y > 0:
-					anim.play("Fall_Right")
+		pl_run()
 		#idle
 		if movement.x == 0:
-			#left
-			if current_direction == "left":
-				anim.play("Idle_Left")
-				#jump left
-				if !is_on_floor():
-					if velocity.y < 0:
-						anim.play("Idle_Jump_Left")
-					if velocity.y > 0:
-						anim.play("Fall_Left")
-			#right
-			if current_direction == "right":
-				anim.play("Idle_Right")
-				#jump right
-				if !is_on_floor():
-					if velocity.y < 0:
-						anim.play("Idle_Jump_Right")
-					if velocity.y > 0:
-						anim.play("Fall_Right")
+			pl_idle()
 	#crouch left
-	if crouch and current_direction == "left":
-		speed = 0
-		anim.play("Crouch_Left")
-		#falling
-		if !is_on_floor():
-			if velocity.y > 0:
-				anim.play("Fall_Left")
-	#crouch right
-	if crouch and current_direction == "right":
-		speed = 0
-		anim.play("Crouch_Right")
-		#falling
-		if !is_on_floor():
-			if velocity.y > 0:
-				anim.play("Fall_Right")
+	if crouch:
+		pl_crouch()
 	#dash
 	if dash > 0:
-		speed = (dash*(int(800/dash_t)))
-		if current_direction == "left":
-			anim.play("Dash_Left")
-			anim.frame = int((dash_t-dash)/5)
-		if current_direction == "right":
-			anim.play("Dash_Right")
-			anim.frame = int((dash_t-dash)/5)
-		if !is_on_floor():
-			velocity.y = 0
+		pl_dash()
 
 func current_gravity():
 	var new_gravity = gravity_force.new()
@@ -153,6 +96,81 @@ func current_gravity():
 		fall_vel = 5
 	if fall_vel >= new_gravity.terminal_vel:
 		fall_vel = new_gravity.terminal_vel
+
+func pl_idle():
+	#left
+	if current_direction == "left":
+		anim.play("Idle_Left")
+		#jump left
+		if !is_on_floor():
+			if velocity.y < 0:
+				anim.play("Idle_Jump_Left")
+			if velocity.y > 0:
+				anim.play("Fall_Left")
+	#right
+	if current_direction == "right":
+		anim.play("Idle_Right")
+		#jump right
+		if !is_on_floor():
+			if velocity.y < 0:
+				anim.play("Idle_Jump_Right")
+			if velocity.y > 0:
+				anim.play("Fall_Right")
+
+func pl_run():
+	#run left
+	if current_direction == "left":
+		if is_on_floor():
+			anim.play("Run_Left")
+		#jump left
+		if !is_on_floor():
+			if velocity.y < 0:
+				anim.play("Jump_Left")
+			if velocity.y > 0:
+				anim.play("Fall_Left")
+	#run right
+	if current_direction == "right":
+		if is_on_floor():
+			anim.play("Run_Right")
+		#jump right
+		if !is_on_floor():
+			if velocity.y < 0:
+				anim.play("Jump_Right")
+			if velocity.y > 0:
+				anim.play("Fall_Right")
+
+func pl_crouch():
+	#crouch left
+	if current_direction == "left":
+		speed = 0
+		anim.play("Crouch_Left")
+		#falling
+		if !is_on_floor():
+			if velocity.y > 0:
+				anim.play("Fall_Left")
+	#crouch right
+	if current_direction == "right":
+		speed = 0
+		anim.play("Crouch_Right")
+		#falling
+		if !is_on_floor():
+			if velocity.y > 0:
+				anim.play("Fall_Right")
+
+func pl_dash():
+	#smooth speed
+	speed = (dash*(int(800/dash_t)))
+	#dash left
+	if current_direction == "left":
+		anim.play("Dash_Left")
+		anim.frame = int((dash_t-dash)/5)
+	#dash right
+	if current_direction == "right":
+		anim.play("Dash_Right")
+		anim.frame = int((dash_t-dash)/5)
+	#horizontal air dash
+	if !is_on_floor():
+		velocity.y = 0
 
 func player_atk():
 	pass
